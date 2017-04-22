@@ -139,8 +139,24 @@ class SignupHandler(Handler):
 
 class WelcomeHandler(Handler):
     # TODO: Check hash in handler before render
+    def check_authorization(self):
+        try:
+            cookie = self.request.cookies["user_auth"]
+            cookie_list = cookie.split("|")
+            user_id = int(cookie_list[0])
+            salt = cookie_list[1]
+            hashed_pw = cookie_list[2]
+            user_cred = User.get_by_id(user_id).password
+            return user_cred == "|".join(cookie_list[1:])
+        except Exception:
+            return False
+
     def get(self):
-        self.render('blog/home.html')
+        authorized = self.check_authorization()
+        if authorized:
+            self.render('blog/home.html')
+        else:
+            self.redirect("/blog/signup")
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
