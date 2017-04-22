@@ -37,8 +37,7 @@ class Hasher():
     @staticmethod
     def unhash_password(stored_hashed_pw, password_input):
         salt = stored_hashed_pw.split("|")[0]
-        hashed_pw = stored_hashed_pw.split("|")[1]
-        return hashed_pw == self.hash_password(password_input, salt)
+        return stored_hashed_pw == Hasher.hash_password(password_input, salt)
 
 
 # Model
@@ -138,7 +137,6 @@ class SignupHandler(Handler):
 
 
 class WelcomeHandler(Handler):
-    # TODO: Check hash in handler before render
     def check_authorization(self):
         try:
             cookie = self.request.cookies["user_auth"]
@@ -154,12 +152,46 @@ class WelcomeHandler(Handler):
     def get(self):
         authorized = self.check_authorization()
         if authorized:
-            self.render('blog/home.html')
+            self.render('blog/welcome.html')
         else:
             self.redirect("/blog/signup")
+
+
+class LoginHandler(Handler):
+    def authenticate_user(self, user_account, password_input):
+        return Hasher.unhash_password(str(user_account.password),
+                                      str(password_input))
+
+    def get(self):
+        self.render('blog/login.html')
+
+    def post(self):
+        username_input = self.request.get('username')
+        password_input = self.request.get('password')
+        user_accounts = User.query(User.username == username_input).fetch(1)
+        if len(user_accounts) > 0:
+            user_account = user_accounts[0]
+            authenticated = self.authenticate_user(user_account, password_input)
+            if authenticated:
+                self.response.set_cookie('user_auth',
+                                         str(user_account.key.id()) + "|" + user_account.password)
+                self.redirect('/blog/welcome')
+            else:
+                self.redirect('/blog/login')
+        else:
+            self.redirect('/blog/login')
+
+
+class LogoutHandler(Handler):
+    def get(self):
+        self.response.set_cookie('user_auth', '')
+        self.redirect('/blog/login')
+
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/blog/signup', SignupHandler),
-    ('/blog/welcome', WelcomeHandler)
+    ('/blog/welcome', WelcomeHandler),
+    ('/blog/login', LoginHandler),
+    ('/blog/logout', LogoutHandler)
 ], debug=True)

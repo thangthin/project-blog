@@ -4,7 +4,7 @@
         <div class="nav-wrapper teal">
             <a href="#" class="brand-logo right">Logo</a>
             <ul id="nav-mobile" class="left hide-on-small-only">
-                <li><a href="/blog/login">Login</a></li>
+                <li><a href="/blog/logout">Logout</a></li>
                 <li><a href="/blog">Home</a></li>
                 <li><a href="/blog/newpost">Post</a></li>
             </ul>
@@ -12,5 +12,13 @@
     </nav>
 </header>
 <main class="container">
-    welcome there budddy
-</main>> {% endblock %
+    <div class="row">
+        welcome kiddo
+        <div class="row">
+            <ul>
+                {% for error in errors %}
+                <li>{{error}}</li>
+                {% endfor %}
+            </ul>
+        </div>
+</main> {% endblock %}
