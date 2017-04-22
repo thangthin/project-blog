@@ -16,12 +16,29 @@ import webapp2
 import jinja2
 import string
 import re
+import hashlib
+import hmac
 
 from google.appengine.ext import ndb
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
                                autoescape=True)
+
+
+class Hasher():
+    # class method
+    @staticmethod
+    def hash_password(password, salt):
+        hasher = hmac.new(salt, password, hashlib.sha256)
+        hashed_pw = hasher.hexdigest()
+        return "%s|%s" % (salt, hashed_pw)
+
+    @staticmethod
+    def unhash_password(stored_hashed_pw, password_input):
+        salt = stored_hashed_pw.split("|")[0]
+        hashed_pw = stored_hashed_pw.split("|")[1]
+        return hashed_pw == self.hash_password(password_input, salt)
 
 
 # Model
@@ -91,10 +108,13 @@ class SignupHandler(Handler):
         # TODO: reimplement using google datastore urlsafe api
         new_user = User()
         new_user.username = username
-        new_user.password = password
+        new_user.password = Hasher.hash_password(password, "salt")
         new_user.email = email
         user_key = new_user.put()
         return user_key.id()
+
+    def set_cookie(self, name, value):
+        self.response.set_cookie(name, value, max_age=360, path='/')
 
     def post(self):
         username_input = self.request.get("username")
@@ -107,14 +127,23 @@ class SignupHandler(Handler):
                                            verify_input,
                                            email_input)
         if not errors:
-            self.register_user(username_input, password_input, email_input)
-            # self.set_cookie("user_auth", "hashed_value")
+            user_id = self.register_user(username_input,
+                                         password_input,
+                                         email_input)
+            hashed_value = User.get_by_id(user_id).password
+            self.set_cookie("user_auth", str(user_id) + "|" + hashed_value)
             self.redirect("/blog/welcome")
         else:
             self.render("blog/signup.html", errors=errors)
 
 
+class WelcomeHandler(Handler):
+    # TODO: Check hash in handler before render
+    def get(self):
+        self.render('blog/home.html')
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/blog/signup', SignupHandler),
+    ('/blog/welcome', WelcomeHandler)
 ], debug=True)
