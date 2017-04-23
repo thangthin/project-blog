@@ -4,8 +4,8 @@
         <div class="nav-wrapper teal">
             <a href="#" class="brand-logo right">Logo</a>
             <ul id="nav-mobile" class="left hide-on-small-only">
-                <li><a href="/blog/signup">Sign Up</a></li>
-                <li><a href="/blog/login">Log in</a></li>
+                <li><a href="/blog/logout">Log out</a></li>
+                <li><a href="/blog/welcome">Home</a></li>
             </ul>
         </div>
     </nav>
@@ -15,26 +15,14 @@
         <form class="col s12" method="post">
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="user_name" type="text" class="validate" name="username" value="{{username}}">
-                    <label for="first_name">User Name</label>
+                    <input id="subject" type="text" class="validate" name="subject" value="{{subject}}">
+                    <label for="subject">Subject</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="password" type="password" class="validate" name="password">
-                    <label for="password">Password</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input id="verify" type="password" class="validate" name="verify">
-                    <label for="verify">Verify Password</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <input id="email" type="email" class="validate" name="email" value="{{email}}">
-                    <label for="email">Email</label>
+                    <textarea id="content" class="materialize-textarea" name="content"></textarea>
+                    <label for="content">Content</label>
                 </div>
             </div>
             <div class="row">

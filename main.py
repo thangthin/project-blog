@@ -48,6 +48,14 @@ class User(ndb.Model):
     email = ndb.StringProperty()
 
 
+class Post(ndb.Model):
+    username = ndb.StringProperty()
+    created_date = ndb.DateTimeProperty(auto_now=True)
+    subject = ndb.StringProperty()
+    content = ndb.TextProperty()
+
+
+# URL Handler
 class Handler(webapp2.RequestHandler):
     def write(self, *args, **kwargs):
         self.response.out.write(*args, **kwargs)
@@ -152,7 +160,8 @@ class WelcomeHandler(Handler):
     def get(self):
         authorized = self.check_authorization()
         if authorized:
-            self.render('blog/welcome.html')
+            posts = Post.query().order(-Post.created_date).fetch(10)
+            self.render('blog/welcome.html', posts=posts)
         else:
             self.redirect("/blog/signup")
 
@@ -171,10 +180,11 @@ class LoginHandler(Handler):
         user_accounts = User.query(User.username == username_input).fetch(1)
         if len(user_accounts) > 0:
             user_account = user_accounts[0]
-            authenticated = self.authenticate_user(user_account, password_input)
+            authenticated = self.authenticate_user(user_account,
+                                                   password_input)
             if authenticated:
                 self.response.set_cookie('user_auth',
-                                         str(user_account.key.id()) + "|" + user_account.password)
+                                         str(user_account.key.id()) + "|" + user_account.password)  # noqa
                 self.redirect('/blog/welcome')
             else:
                 self.redirect('/blog/login')
@@ -188,10 +198,46 @@ class LogoutHandler(Handler):
         self.redirect('/blog/login')
 
 
+class NewPostHandler(Handler):
+    def get_user_name(self):
+        cookie = self.request.cookies["user_auth"]
+        user_id = cookie.split("|")[0]
+        username = User.get_by_id(int(user_id)).username
+        return username
+
+    def save_post(self, username, subject, content):
+        post = Post()
+        post.username = username
+        post.subject = subject
+        post.content = content
+        post_key = post.put()
+        url_string = post_key.urlsafe()
+        return url_string
+
+    def get(self):
+        self.render('blog/newpost.html')
+
+    def post(self):
+        username = self.get_user_name()
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+        url_safe_post = self.save_post(username, subject, content)
+        uri = webapp2.uri_for('post-page', post_id=url_safe_post)
+        self.redirect(uri)
+
+
+class PostHandler(Handler):
+    def get(self, post_id):
+        post_key = ndb.Key(urlsafe=post_id)
+        post = post_key.get()
+        self.render('blog/post.html', post=post)
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/blog/signup', SignupHandler),
     ('/blog/welcome', WelcomeHandler),
     ('/blog/login', LoginHandler),
-    ('/blog/logout', LogoutHandler)
+    ('/blog/logout', LogoutHandler),
+    ('/blog/newpost', NewPostHandler),
+    webapp2.Route(r'/blog/post/<post_id:\S+>', handler=PostHandler, name='post-page'),  # noqa
 ], debug=True)
