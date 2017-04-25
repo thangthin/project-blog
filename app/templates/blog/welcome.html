@@ -20,9 +20,10 @@
                     <p>{{post.content}}</p>
                 </div>
                 <div class="card-action">
-                    <a href="#">Edit</a>
                     <a href="#">Created By {{post.username}}</a>
-                    <span>Created On - {{post.created_date}}</span>
+                    <span>Created On - {{post.created_date}}</span> {% if post.username == user.username %}
+                    <a href="/blog/delete/post/{{post.key.urlsafe()}}" class="right">Delete</a>
+                    <a href="/blog/edit/post/{{post.key.urlsafe()}}" class="right">Edit</a> {% endif %}
                 </div>
             </div>
         </div>
