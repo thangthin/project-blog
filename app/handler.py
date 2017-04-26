@@ -34,6 +34,16 @@ class Handler(webapp2.RequestHandler):
         except Exception:
             return None
 
+    def get_user(self):
+        try:
+            cookie = self.request.cookies["user_auth"]
+            cookie_list = cookie.split("|")
+            user_id = int(cookie_list[0])
+            user = User.get_by_id(user_id)
+            return user
+        except Exception:
+            return None
+
     def is_authorize(self, post_id):
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()

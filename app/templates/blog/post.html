@@ -21,8 +21,9 @@
                     <p>{{post.content}}</p>
                 </div>
                 <div class="card-action">
-                    <a href="/blog/edit/post/{{post.key.urlsafe()}}">Edit</a>
-                    <a href="#">Created By {{post.username}}</a>
+                    <a href="#">Created By {{post.username}}</a> {% if post.username == user.username %}
+                    <a href="/blog/delete/post/{{post.key.urlsafe()}}" class="right">Delete</a>
+                    <a href="/blog/edit/post/{{post.key.urlsafe()}}" class="right">Edit</a> {% endif %}
                 </div>
             </div>
         </div>
