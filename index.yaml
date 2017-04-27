@@ -15,3 +15,9 @@ indexes:
   - name: post_url_string
   - name: created_date
     direction: desc
+
+- kind: Comment
+  ancestor: yes
+  properties:
+  - name: created_date
+    direction: desc

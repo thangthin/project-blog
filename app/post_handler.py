@@ -8,38 +8,26 @@ blog_uri = BlogRoutes()
 
 class PostHandler(Handler):
     def get(self, post_id):
-        comments_qry = Comment.query(Comment.post_url_string == post_id)
-        comments = comments_qry.order(-Comment.created_date).fetch()
-        print comments
         post_key = ndb.Key(urlsafe=post_id)
+        comments = Comment.query_post(post_key).fetch(10)
         post = post_key.get()
         user = self.get_user()
         self.render('blog/post.html', post=post, user=user, comments=comments)
 
     def post(self, post_id):
-        comments_qry = Comment.query(Comment.post_url_string == post_id)
-        comments = comments_qry.order(-Comment.created_date).fetch()
-        print type(comments)
-
-        comment_input = self.request.get("comment")
-        comment = Comment()
-        comment.post_url_string = post_id
-        comment.username = self.get_username()
-        comment.user_id = self.get_userid()
-        comment.content = comment_input
+        user = self.get_user()
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()
+        post_id_num = post.key.id()
+        ancestor_key = ndb.Key('Post', post_id_num or '*notitle*')  # this can be post_key
 
-        comment.post_id = post.key.id()
-        user = self.get_user()
-        comment_key = comment.put()
-        # manually append to comments list
-        # uri_post = webapp2.uri_for(blog_uri.post_uri_name, post_id=post_id)
-        # self.redirect(uri_post)
-        # list to store all the comments for particular post TODO: implement
-        # print comments
-        # TODO: Need better implementation as post request is made again when page is refreshed
-        comments.insert(0, comment)
-        self.render('blog/post.html', post=post, user=user, comments=comments)
-        # uri_post = webapp2.uri_for(blog_uri.post_uri_name, post_id=post_id)
-        # self.redirect(uri_post)
+        parent_key = ndb.Key("Post", post_id_num)
+        comment = Comment(parent=parent_key)
+        comment_input = self.request.get("comment")
+        comment.content = comment_input
+        comment.post_id = post_id_num
+        comment.post_url_string = post_id
+        comment.username = user.username
+        comment.user_id = user.key.id()
+        comment.put()
+        self.redirect("/blog/post/"+post_id)
