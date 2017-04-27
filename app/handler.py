@@ -34,6 +34,9 @@ class Handler(webapp2.RequestHandler):
         except Exception:
             return None
 
+    def get_userid(self):
+        return self.get_user().key.id()
+
     def get_user(self):
         try:
             cookie = self.request.cookies["user_auth"]
