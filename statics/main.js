@@ -6,6 +6,11 @@ $(document).ready(function() {
     });
 });
 
+// set the constants for url to switch between localhost and hosted url
+const WEB_APP_URL = window.location.origin;
+const SAVE_COMMENT_URL = `${WEB_APP_URL}/blog/comment/`;
+const DELETE_COMMENT_URL = `${WEB_APP_URL}/blog/comment/`;
+
 function setModalContentFor(commentId) {
     // Prefill the modal form content with comment value, and add click listener to modal button
     function saveCommentWrapper() {
@@ -41,7 +46,7 @@ function saveComment(commentId, commentContent) {
     form.append('comment-content', commentContent);
     form.append('comment-id', commentId);
     // fetch post the form to comment handler
-    fetch('http://localhost:8080/blog/comment/', {
+    fetch(SAVE_COMMENT_URL, {
         credentials: 'same-origin',
         method: 'post',
         body: form
@@ -59,7 +64,7 @@ function deleteComment(commentId) {
     let form = new FormData();
     form.append('comment-id', commentId);
     // fetch delete the form to comment Handler
-    fetch(`http://localhost:8080/blog/comment/${commentId}`, {
+    fetch(`${DELETE_COMMENT_URL}${commentId}`, {
         credentials: 'same-origin',
         method: 'delete'
     }).then((request) => {
@@ -82,14 +87,4 @@ function updateComment(commentId, data) {
     let comment_created_date_el = document.getElementById(`comment-created-id-${commentId}`);
     comment_content_el.innerText = data.comment_content;
     comment_created_date_el = data.updated_date;
-}
-
-function addComment(post_id, comment_content) {
-    let form = new FormData();
-    form.append('comment', comment_content)
-    fetch(`http://localhost:8080/blog/post/${post_id}`, {
-        credentials: 'same-origin',
-        method: 'post',
-        body: form
-    })
 }
