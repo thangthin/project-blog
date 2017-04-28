@@ -32,7 +32,7 @@
         <div class="col s12 m12">
             <form method="post">
                 <label for="comment">Comment</label>
-                <textarea name="comment" cols="30" rows="10"></textarea>
+                <textarea id="comment-text-box" name="comment" cols="30" rows="10"></textarea>
                 <input type="submit">
             </form>
         </div>
@@ -41,16 +41,46 @@
         <div class="col s12 m12">
             <ul class="collection">
                 {% for comment in comments %}
-                <li class="collection-item avatar">
-                    <p>{{comment.content}}</p>
+                <li class="collection-item avatar" id="comment-container-{{comment.key.urlsafe()}}">
+                    <pre id="comment-{{comment.key.urlsafe()}}">{{comment.content}}</pre>
                     <p>
                         <a href="#!">{{comment.username}}</a>
-                        <span>{{comment.created_date}}</span>
+                        <span id="comment-created-id-{{comment.key.urlsafe()}}">{{comment.created_date}}</span> {% if comment.username == user.username %}
+                        <button class="btn right" data-target="modal2" data-target-comment="comment-{{comment.key.urlsafe()}}" onclick="setModalContentForDelete('{{comment.key.urlsafe()}}')">Delete</button>
+                        <button data-target="modal1" class="btn right" data-target-comment="comment-{{comment.key.urlsafe()}}" onclick="setModalContentFor('{{comment.key.urlsafe()}}')">Edit</button> {% endif %}
                     </p>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <form method="post" id="comment-edit-form">
+                <div class="row">
+                    <div class="col s12">
+                        <textarea id="modal-form-content" name="comment" class=""></textarea>
+                        <label for="content">Content</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" id="modal-form-cancel-button" class="modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
+            <a id="modal-form-save-button" href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Save</a>
+        </div>
+    </div>
 
+    <!-- Modal Delete Structure -->
+    <div id="modal2" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            Are you sure you want to delete your comment?
+            <p id="delete-comment-content"></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" id="modal-delete-form-no-button" class="modal-action modal-close waves-effect waves-green btn-flat">No</a>
+            <a id="modal-delete-form-yes-button" href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Yes</a>
+        </div>
+    </div>
 </main>{% endblock %}

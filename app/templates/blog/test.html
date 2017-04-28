@@ -10,13 +10,29 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.js"></script>
-    <script src="/statics/main.js"></script>
     <link rel="stylesheet" href="/statics/styles.css">
     <title>Project Blog</title>
 </head>
 
 <body>
-    {% block content %} {% endblock %}
+    <a class="modal-trigger waves-effect waves-light btn" href="#modal1">Modal</a>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal modal-fixed-footer">
+        <div class="modal-content">
+            <h4>Modal Header</h4>
+            <p>A bunch of text</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>
+        </div>
+    </div>
 </body>
+<script>
+    $(document).ready(function() {
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+    });
+</script>
 
 </html>

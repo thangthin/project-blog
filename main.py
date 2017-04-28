@@ -26,7 +26,7 @@ from app.post_handler import PostHandler
 from app.post_edit_handler import PostEditHandler
 from app.post_delete_handler import PostDeleteHandler
 from app.post_delete_success_handler import PostDeleteSuccessHandler
-
+from app.comment_handler import CommentHandler
 blog_uri = BlogRoutes()
 
 app = webapp2.WSGIApplication([
@@ -58,5 +58,11 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/blog/delete/post/<post_id:\S+>',
                   handler=PostDeleteHandler,
                   name=blog_uri.post_delete_uri_name),
+    webapp2.Route(r'/blog/comment/<comment_id:\S+>',
+                  handler=CommentHandler,
+                  name='comment-delete-api'),
+    webapp2.Route(r'/blog/comment/',
+                  handler=CommentHandler,
+                  name='comment-api'),
 
 ], debug=True)
