@@ -24,9 +24,11 @@
                 <div class="card-action">
                     <a href="#" class="">Created By {{post.username}}</a>
                     {% if post.username != user.username %}
-                    <button id="vote-button" class="btn-flat"><i class="material-icons">thumb_up</i></button>
+                    <button id="vote-button" class="btn-flat teal accent-1"><i class="material-icons">thumb_up</i></button>
                     {% endif %}
-                    <span id="votes-display">0</span>
+                    <button class="btn-flat teal accent-1 disabled">
+                        <span id="votes-display">{{post.vote}}</span><span> Likes</span>
+                    </button>  
                     {% if post.username == user.username %}
                     <a href="/blog/delete/post/{{post.key.urlsafe()}}" class="right">Delete</a>
                     <a href="/blog/edit/post/{{post.key.urlsafe()}}" class="right">Edit</a>
