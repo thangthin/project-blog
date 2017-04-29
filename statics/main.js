@@ -101,10 +101,15 @@ function updateComment(commentId, data) {
 function updateVote(postId) {
     function updateVoteDisplay(resObj) {
         // update the view with updated vote
-        console.log("updateVoteDisplay");
-        let currentVoteCount = parseInt($('#votes-display').text());
-        currentVoteCount += 1;
-        $('#votes-display').text(currentVoteCount);
+        console.log("updateVoteDisplay", resObj);
+        if (resObj.success == 'False') {
+            console.log("bring up warning message modal");
+            $('#modal3').modal('open');
+        } else {
+            let currentVoteCount = parseInt($('#votes-display').text());
+            currentVoteCount += 1;
+            $('#votes-display').text(currentVoteCount);
+        }
     }
     // API call to update the vote of post
     // if api call successful, update frontend

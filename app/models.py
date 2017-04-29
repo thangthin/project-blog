@@ -9,6 +9,11 @@ class User(ndb.Model):
     email = ndb.StringProperty()
 
 
+class Voter(ndb.Model):
+    """Entity used to keep track of voters"""
+    username = ndb.StringProperty()
+
+
 class Post(ndb.Model):
     """Entity to represent Post"""
     username = ndb.StringProperty()
@@ -16,6 +21,7 @@ class Post(ndb.Model):
     subject = ndb.StringProperty()
     content = ndb.TextProperty()
     vote = ndb.IntegerProperty()
+    voters = ndb.StructuredProperty(Voter, repeated=True)
 
 
 class Comment(ndb.Model):

@@ -1,5 +1,5 @@
 import webapp2
-from models import User, Post
+from models import User, Post, Voter
 from handler import Handler
 from blog_routes import BlogRoutes
 blog_uri = BlogRoutes()
@@ -13,7 +13,7 @@ class NewPostHandler(Handler):
         return username
 
     def save_post(self, username, subject, content):
-        post = Post()
+        post = Post(voters=[Voter(username=username)])
         post.username = username
         post.subject = subject
         post.content = content
