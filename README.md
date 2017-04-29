@@ -13,3 +13,6 @@
 In terminal inside the project where app.yaml file is stored, run:
 
 `dev_appserver.py .`
+
+### Check out the publicly accessible blog
+[public accessible site](https://first-thangs-first.appspot.com/blog/signup)
