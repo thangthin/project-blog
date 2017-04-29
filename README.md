@@ -11,4 +11,5 @@
 
 ### Running the project
 In terminal inside the project where app.yaml file is stored, run:
+
 `dev_appserver.py .`

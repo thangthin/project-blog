@@ -19,6 +19,7 @@ $(document).ready(function() {
 const WEB_APP_URL = window.location.origin;
 const SAVE_COMMENT_URL = `${WEB_APP_URL}/blog/comment/`;
 const DELETE_COMMENT_URL = `${WEB_APP_URL}/blog/comment/`;
+const UPDATE_VOTE_URL = `${WEB_APP_URL}/blog/postvote`;
 
 function setModalContentFor(commentId) {
     // Prefill the modal form content with comment value, and add click listener to modal button
