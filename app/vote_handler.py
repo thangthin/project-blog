@@ -21,7 +21,6 @@ class VoteHandler(Handler):
             'updated_vote': post.vote
         }
         if voter in post.voters:
-            print "found voter in voters"
             obj['success'] = 'False'
             obj['updated_vote'] = post.vote
         else:
