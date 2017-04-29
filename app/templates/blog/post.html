@@ -19,11 +19,18 @@
                 <div class="card-content white-text">
                     <span class="card-title">{{post.subject}}</span>
                     <pre>{{post.content}}</pre>
+                    <input id="post-id-holder" hidden value="{{post.key.urlsafe()}}">
                 </div>
                 <div class="card-action">
-                    <a href="#">Created By {{post.username}}</a> {% if post.username == user.username %}
+                    <a href="#" class="">Created By {{post.username}}</a>
+                    {% if post.username != user.username %}
+                    <button id="vote-button" class="btn-flat"><i class="material-icons">thumb_up</i></button>
+                    {% endif %}
+                    <span id="votes-display">0</span>
+                    {% if post.username == user.username %}
                     <a href="/blog/delete/post/{{post.key.urlsafe()}}" class="right">Delete</a>
-                    <a href="/blog/edit/post/{{post.key.urlsafe()}}" class="right">Edit</a> {% endif %}
+                    <a href="/blog/edit/post/{{post.key.urlsafe()}}" class="right">Edit</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

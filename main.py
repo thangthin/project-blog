@@ -27,6 +27,7 @@ from app.post_edit_handler import PostEditHandler
 from app.post_delete_handler import PostDeleteHandler
 from app.post_delete_success_handler import PostDeleteSuccessHandler
 from app.comment_handler import CommentHandler
+from app.vote_handler import VoteHandler
 blog_uri = BlogRoutes()
 
 app = webapp2.WSGIApplication([
@@ -64,5 +65,8 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/blog/comment/',
                   handler=CommentHandler,
                   name='comment-api'),
+    webapp2.Route(r'/blog/postvote/',
+                  handler=VoteHandler,
+                  name='post-vote-api'),
 
 ], debug=True)

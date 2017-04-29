@@ -17,6 +17,7 @@ class NewPostHandler(Handler):
         post.username = username
         post.subject = subject
         post.content = content
+        post.vote = 0
         post_key = post.put()
         url_string = post_key.urlsafe()
         return url_string

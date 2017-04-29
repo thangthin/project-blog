@@ -4,6 +4,15 @@ $(document).ready(function() {
     $('.modal').modal({
         dismissible: false
     });
+
+    $('#vote-button').on('click', voteHandler);
+
+    function voteHandler() {
+        console.log("voteHandler called");
+        let postId = $('#post-id-holder').val();
+        // make api call to update vote for by user
+        updateVote(postId);
+    }
 });
 
 // set the constants for url to switch between localhost and hosted url
@@ -87,4 +96,31 @@ function updateComment(commentId, data) {
     let comment_created_date_el = document.getElementById(`comment-created-id-${commentId}`);
     comment_content_el.innerText = data.comment_content;
     comment_created_date_el = data.updated_date;
+}
+
+function updateVote(postId) {
+    function updateVoteDisplay(resObj) {
+        // update the view with updated vote
+        console.log("updateVoteDisplay");
+        let currentVoteCount = parseInt($('#votes-display').text());
+        currentVoteCount += 1;
+        $('#votes-display').text(currentVoteCount);
+    }
+    // API call to update the vote of post
+    // if api call successful, update frontend
+    console.log('updateVote called');
+    // fetch call
+    let form = new FormData();
+    form.append('post-id', postId);
+
+    fetch('http://localhost:8080/blog/postvote/', {
+        credentials: 'same-origin',
+        method: 'put',
+        body: form
+    }).then((response) => {
+        console.log("update vote call", response.status);
+        return response.json();
+    }).then((resObj) => {
+        updateVoteDisplay(resObj);
+    });
 }

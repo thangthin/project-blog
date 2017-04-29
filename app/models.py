@@ -15,6 +15,7 @@ class Post(ndb.Model):
     created_date = ndb.DateTimeProperty(auto_now=True)
     subject = ndb.StringProperty()
     content = ndb.TextProperty()
+    vote = ndb.IntegerProperty()
 
 
 class Comment(ndb.Model):
