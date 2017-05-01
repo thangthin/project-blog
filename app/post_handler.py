@@ -3,13 +3,15 @@ from handler import Handler
 from google.appengine.ext import ndb
 from models import User, Post, Comment
 from blog_routes import BlogRoutes
+from blog_decorators import post_exists
+
 blog_uri = BlogRoutes()
 
 
 class PostHandler(Handler):
     def get(self, post_id):
         post_key = ndb.Key(urlsafe=post_id)
-        comments = Comment.query_post(post_key).fetch(10)
+        comments = Comment.query_post(post_key).fetch()
         post = post_key.get()
         user = self.get_user()
         self.render('blog/post.html', post=post, user=user, comments=comments)

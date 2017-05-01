@@ -10,6 +10,17 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
 
 
 class Handler(webapp2.RequestHandler):
+    def initialize(self, *args, **kwargs):
+        webapp2.RequestHandler.initialize(self, *args, **kwargs)
+        try:
+            cookie = self.request.cookies["user_auth"]
+            cookie_list = cookie.split("|")
+            user_id = int(cookie_list[0])
+            user = User.get_by_id(user_id)
+            self.user = user
+        except Exception:
+            self.user = None
+
     def authenticate(self):
         try:
             cookie = self.request.cookies["user_auth"]
@@ -18,7 +29,6 @@ class Handler(webapp2.RequestHandler):
             salt = cookie_list[1]
             hashed_pw = cookie_list[2]
             user_cred = User.get_by_id(user_id).password
-            print user_cred, "###<----------"
             return user_cred == "|".join(cookie_list[1:])
         except Exception:
             print "exception thrown"
