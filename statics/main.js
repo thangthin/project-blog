@@ -93,10 +93,18 @@ function removeCommentElem(commentId) {
 }
 
 function updateComment(commentId, data) {
+    function handleError(data) {
+        console.log(data.success, data.comment_content);
+    }
+
     let comment_content_el = document.getElementById(`comment-${commentId}`);
     let comment_created_date_el = document.getElementById(`comment-created-id-${commentId}`);
-    comment_content_el.innerText = data.comment_content;
-    comment_created_date_el = data.updated_date;
+    if (data.success == 'True') {
+        comment_content_el.innerText = data.comment_content;
+        comment_created_date_el = data.updated_date;
+    } else {
+        handleError(data); //TODO Implement handle error feature
+    }
 }
 
 function updateVote(postId) {

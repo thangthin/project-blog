@@ -23,7 +23,7 @@ class NewPostHandler(Handler):
         return url_string
 
     def get(self):
-        self.render('blog/newpost.html')
+        self.render('blog/newpost.html', user=self.user)
 
     def post(self):
         username = self.get_user_name()

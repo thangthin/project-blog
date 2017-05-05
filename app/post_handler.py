@@ -9,12 +9,13 @@ blog_uri = BlogRoutes()
 
 
 class PostHandler(Handler):
-    def get(self, post_id):
-        post_key = ndb.Key(urlsafe=post_id)
+    @post_exists
+    def get(self, post_id, post, post_key):
         comments = Comment.query_post(post_key).fetch()
-        post = post_key.get()
-        user = self.get_user()
-        self.render('blog/post.html', post=post, user=user, comments=comments)
+        self.render('blog/post.html',
+                    post=post,
+                    user=self.user,
+                    comments=comments)
 
     def post(self, post_id):
         user = self.get_user()

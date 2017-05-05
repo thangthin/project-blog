@@ -3,6 +3,7 @@
     <nav>
         <div class="nav-wrapper teal">
             <a href="#" class="brand-logo right">Logo</a>
+            <span>{{user.username}}</span>
             <ul id="nav-mobile" class="left hide-on-small-only">
                 <li><a href="/blog/logout">Log out</a></li>
                 <li><a href="/blog/newpost">New Post</a></li>
@@ -29,10 +30,10 @@
                     <button class="btn-flat teal accent-1 disabled">
                         <span id="votes-display">{{post.vote}}</span><span> Likes</span>
                     </button>  
-                    {% if post.username == user.username %}
+
                     <a href="/blog/delete/post/{{post.key.urlsafe()}}" class="right">Delete</a>
                     <a href="/blog/edit/post/{{post.key.urlsafe()}}" class="right">Edit</a>
-                    {% endif %}
+
                 </div>
             </div>
         </div>
@@ -54,9 +55,17 @@
                     <pre id="comment-{{comment.key.urlsafe()}}">{{comment.content}}</pre>
                     <p>
                         <a href="#!">{{comment.username}}</a>
-                        <span id="comment-created-id-{{comment.key.urlsafe()}}">{{comment.created_date}}</span> {% if comment.username == user.username %}
-                        <button class="btn right" data-target="modal2" data-target-comment="comment-{{comment.key.urlsafe()}}" onclick="setModalContentForDelete('{{comment.key.urlsafe()}}')">Delete</button>
-                        <button data-target="modal1" class="btn right" data-target-comment="comment-{{comment.key.urlsafe()}}" onclick="setModalContentFor('{{comment.key.urlsafe()}}')">Edit</button> {% endif %}
+                        <span id="comment-created-id-{{comment.key.urlsafe()}}">{{comment.created_date}}</span> 
+  
+                        <button class="btn right" 
+                                data-target="modal2" 
+                                data-target-comment="comment-{{comment.key.urlsafe()}}" 
+                                onclick="setModalContentForDelete('{{comment.key.urlsafe()}}')">Delete</button>
+                        <button data-target="modal1"
+                                class="btn right"
+                                data-target-comment="comment-{{comment.key.urlsafe()}}"
+                                onclick="setModalContentFor('{{comment.key.urlsafe()}}')">Edit</button>
+
                     </p>
                 </li>
                 {% endfor %}
