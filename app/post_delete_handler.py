@@ -10,6 +10,7 @@ blog_uri = BlogRoutes()
 class PostDeleteHandler(Handler):
     @post_exists
     def get(self, post_id, *args, **kwargs):
+        """Show user confirmation on post to delete"""
         authenticated = self.authenticate()
         authorized = self.is_authorize(post_id)
         if authenticated and authorized:
@@ -23,6 +24,7 @@ class PostDeleteHandler(Handler):
     @post_exists
     @user_own_post
     def post(self, post_id):
+        """Delete post if post exist and user own post"""
         authenticated = self.authenticate()
         authorized = self.is_authorize(post_id)
         if authenticated and authorized:
