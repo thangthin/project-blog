@@ -29,14 +29,17 @@ def post_exists(function):
 def user_own_post(function):
     """Make sure user own post, if not, redirect to login"""
     @wraps(function)
-    def wrapper(self, *args, **kwargs):
-        print "inside user own post"
-        post_id = kwargs.get("post_id")
-        print "inside user_own_post", post_id
-        post_key = ndb.Key(urlsafe=post_id)
+    def wrapper(self, post_id, *args, **kwargs):
+        print "inside user own post decorator"
+        post_urlsafe = None
+        if post_id:
+            post_urlsafe = post_id
+        else:
+            post_urlsafe = kwargs.get("post_id")
+        post_key = ndb.Key(urlsafe=post_urlsafe)
         post = post_key.get()
         if post.username == self.user.username:
-            return function(self, *args, **kwargs)
+            return function(self, post_id)
         else:
             self.redirect('/blog/error')
             return

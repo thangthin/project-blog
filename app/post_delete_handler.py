@@ -8,8 +8,6 @@ blog_uri = BlogRoutes()
 
 
 class PostDeleteHandler(Handler):
-    # @post_exists
-    # @user_own_post
     @post_exists
     def get(self, post_id, *args, **kwargs):
         authenticated = self.authenticate()
