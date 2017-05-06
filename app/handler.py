@@ -11,6 +11,8 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
 
 class Handler(webapp2.RequestHandler):
     def initialize(self, *args, **kwargs):
+        """Save user instance, if cookie is set but corrupt
+           redirect user to login page"""
         webapp2.RequestHandler.initialize(self, *args, **kwargs)
         try:
             cookie = self.request.cookies["user_auth"]
@@ -20,6 +22,8 @@ class Handler(webapp2.RequestHandler):
             self.user = user
         except Exception:
             self.user = None
+        if cookie and not self.user:
+            self.redirect('/blog/logout')
 
     def authenticate(self):
         try:
