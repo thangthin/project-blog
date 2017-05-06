@@ -11,18 +11,12 @@ blog_uri = BlogRoutes()
 class CommentHandler(Handler):
     @comment_exists
     @user_own_comment
-    def post(self, comment_passed):
-        # TODO: use passed in comment
-        comment_urlsafe = self.request.get('comment-id')
+    def post(self, comment, **kwargs):
         comment_content = self.request.get("comment-content")
-        comment_key = ndb.Key(urlsafe=comment_urlsafe)
-        comment = comment_key.get()
         comment.content = comment_content
         comment.put()
-        print "comment passed", comment_passed
         self.response.content_type = 'application/json'
         print 'comment time', comment.created_date
-
         obj = {
             'success': 'True',
             'updated_date': comment.created_date.isoformat(),
@@ -30,14 +24,12 @@ class CommentHandler(Handler):
         }
         self.response.write(json.encode(obj))
 
-    def delete(self, comment_id):
-        print "delete gets called", comment_id
-        # get comment
-        ndb.Key(urlsafe=comment_id).delete()
-        # delete comment
+    @comment_exists
+    @user_own_comment
+    def delete(self, comment, comment_key, **kwargs):
+        print "delete gets called", comment
+        comment_key.delete()
         obj = {
             'success': 'True',
         }
         self.response.write(json.encode(obj))
-        # comment_id = self.request.get('comment-id')
-        # print "request received to delete comment", comment_id

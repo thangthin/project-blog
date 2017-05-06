@@ -21,6 +21,8 @@ class PostEditHandler(Handler):
             uri_welcome = webapp2.uri_for(blog_uri.welcome_uri_name)
             self.redirect(uri_welcome)
 
+    @user_logged_in
+    @user_own_post
     def post(self, post_id):
         authenticated = self.authenticate()
         authorized = self.is_authorize(post_id)

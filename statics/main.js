@@ -69,6 +69,11 @@ function saveComment(commentId, commentContent) {
     });
 }
 
+function handleError(data) {
+    console.log("inside handler error");
+    alert(data.success + ": " + data.comment_content);
+}
+
 function deleteComment(commentId) {
     console.log('deleteComment called with arguments:', commentId);
     let form = new FormData();
@@ -81,9 +86,11 @@ function deleteComment(commentId) {
         console.log("delete request status:", request.status);
         return request.json();
     }).then((data) => {
-        console.log(data);
-        if (data.success) {
+        console.log(data, "from delete comment json resolve");
+        if (data.success == 'True') {
             removeCommentElem(commentId);
+        } else {
+            handleError(data);
         }
     });
 }
@@ -93,10 +100,6 @@ function removeCommentElem(commentId) {
 }
 
 function updateComment(commentId, data) {
-    function handleError(data) {
-        console.log(data.success, data.comment_content);
-    }
-
     let comment_content_el = document.getElementById(`comment-${commentId}`);
     let comment_created_date_el = document.getElementById(`comment-created-id-${commentId}`);
     if (data.success == 'True') {

@@ -3,11 +3,15 @@ from handler import Handler
 from google.appengine.ext import ndb
 from blog_routes import BlogRoutes
 from models import User
+from blog_decorators import user_own_post, post_exists
 blog_uri = BlogRoutes()
 
 
 class PostDeleteHandler(Handler):
-    def get(self, post_id):
+    # @post_exists
+    # @user_own_post
+    @post_exists
+    def get(self, post_id, *args, **kwargs):
         authenticated = self.authenticate()
         authorized = self.is_authorize(post_id)
         if authenticated and authorized:
@@ -18,6 +22,8 @@ class PostDeleteHandler(Handler):
             uri_welcome = webapp2.uri_for(blog_uri.welcome_uri_name)
             self.redirect(uri_welcome)
 
+    @post_exists
+    @user_own_post
     def post(self, post_id):
         authenticated = self.authenticate()
         authorized = self.is_authorize(post_id)

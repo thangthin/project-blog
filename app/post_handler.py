@@ -3,7 +3,7 @@ from handler import Handler
 from google.appengine.ext import ndb
 from models import User, Post, Comment
 from blog_routes import BlogRoutes
-from blog_decorators import post_exists
+from blog_decorators import post_exists, user_own_post
 
 blog_uri = BlogRoutes()
 
@@ -11,6 +11,7 @@ blog_uri = BlogRoutes()
 class PostHandler(Handler):
     @post_exists
     def get(self, post_id, post, post_key):
+        """Viewing Specific Post"""
         comments = Comment.query_post(post_key).fetch()
         self.render('blog/post.html',
                     post=post,
@@ -18,11 +19,12 @@ class PostHandler(Handler):
                     comments=comments)
 
     def post(self, post_id):
+        """Creating a new post"""
         user = self.get_user()
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()
         post_id_num = post.key.id()
-        ancestor_key = ndb.Key('Post', post_id_num or '*notitle*')  # this can be post_key
+        ancestor_key = ndb.Key('Post', post_id_num or '*notitle*')
 
         parent_key = ndb.Key("Post", post_id_num)
         comment = Comment(parent=parent_key)
