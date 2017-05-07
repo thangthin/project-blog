@@ -22,6 +22,9 @@ class PostHandler(Handler):
     def post(self, post_id):
         """TODO: FIX This to creat new post instead of Creating comment!!!!!"""
         print "inside creating a post of post handler"
+        # get the method of form
+        method = self.request.get("_method")
+        print "the method passed ##########", method
         user = self.get_user()
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()
@@ -42,7 +45,8 @@ class PostHandler(Handler):
     @post_exists
     def put(self, post_id, post, *args):
         """Update post with post_id"""
-        print "inside post handler put method"
+        method = self.request.get("_method")
+        print "inside post handler put method", method
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()
         post.subject = self.request.get('subject')

@@ -15,10 +15,10 @@ $(document).ready(function() {
     }
 
     // prevent defaults of submit buttons, use fetch for passing form value
-    let postEditForm = document.getElementById('post-edit-submit').addEventListener('click', (evt) => {
-        evt.preventDefault();
-        console.log("prevented default on post edit form");
-    });
+    // let postEditForm = document.getElementById('post-edit-submit').addEventListener('click', (evt) => {
+    //     evt.preventDefault();
+    //     console.log("prevented default on post edit form");
+    // });
 });
 
 // set the constants for url to switch between localhost and hosted url

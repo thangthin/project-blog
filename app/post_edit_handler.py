@@ -24,6 +24,8 @@ class PostEditHandler(Handler):
     @user_logged_in
     @user_own_post
     def post(self, post_id):
+        method = self.request.get("_method")
+        print "inside post of postedithandler, the method passed is ", method
         authenticated = self.authenticate()
         authorized = self.is_authorize(post_id)
         if authenticated and authorized:
