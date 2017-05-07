@@ -7,6 +7,5 @@ blog_uri = BlogRoutes()
 class LogoutHandler(Handler):
     def get(self):
         self.response.set_cookie('user_auth', '')
-        # self.redirect('/blog/login')
         uri_login = webapp2.uri_for(blog_uri.login_uri_name)
         self.redirect(uri_login)

@@ -11,20 +11,25 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
 
 class Handler(webapp2.RequestHandler):
     def initialize(self, *args, **kwargs):
-        """Save user instance, if cookie is set but corrupt
+        """Save user instance, if cookie is set but corrupt - e.g bad user id or hash
            redirect user to login page"""
         webapp2.RequestHandler.initialize(self, *args, **kwargs)
         cookie = None
+        print "inside base handler initialize"
         try:
             cookie = self.request.cookies["user_auth"]
             cookie_list = cookie.split("|")
             user_id = int(cookie_list[0])
             user = User.get_by_id(user_id)
             self.user = user
+            print "intialize found user"
         except Exception:
             self.user = None
-        if cookie and not self.user:
-            self.redirect('/blog/logout')
+            print "intialize can not find user"
+        if (cookie and not self.user) or (cookie and not self.authenticate()):
+            print "clear cookie and redirect to login"
+            self.response.set_cookie('user_auth', '')
+            self.redirect('/blog/login')
 
     def authenticate(self):
         try:

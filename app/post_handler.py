@@ -10,6 +10,7 @@ blog_uri = BlogRoutes()
 
 
 class PostHandler(Handler):
+    """Handle the viewing of a specific post"""
     @post_exists
     def get(self, post_id, post, post_key):
         """Viewing Specific Post"""
@@ -19,43 +20,43 @@ class PostHandler(Handler):
                     user=self.user,
                     comments=comments)
 
-    def post(self, post_id):
-        """TODO: FIX This to creat new post instead of Creating comment!!!!!"""
-        print "inside creating a post of post handler"
-        # get the method of form
-        method = self.request.get("_method")
-        print "the method passed ##########", method
-        user = self.get_user()
-        post_key = ndb.Key(urlsafe=post_id)
-        post = post_key.get()
-        post_id_num = post.key.id()
-        ancestor_key = ndb.Key('Post', post_id_num or '*notitle*')
+    # def post(self, post_id):
+    #     """TODO: FIX This to creat new post instead of Creating comment!!!!!"""
+    #     print "inside creating a post of post handler"
+    #     # get the method of form
+    #     method = self.request.get("_method")
+    #     print "the method passed ##########", method
+    #     user = self.get_user()
+    #     post_key = ndb.Key(urlsafe=post_id)
+    #     post = post_key.get()
+    #     post_id_num = post.key.id()
+    #     ancestor_key = ndb.Key('Post', post_id_num or '*notitle*')
 
-        parent_key = ndb.Key("Post", post_id_num)
-        comment = Comment(parent=parent_key)
-        comment_input = self.request.get("comment")
-        comment.content = comment_input
-        comment.post_id = post_id_num
-        comment.post_url_string = post_id
-        comment.username = user.username
-        comment.user_id = user.key.id()
-        comment.put()
-        self.redirect("/blog/post/"+post_id)
+    #     parent_key = ndb.Key("Post", post_id_num)
+    #     comment = Comment(parent=parent_key)
+    #     comment_input = self.request.get("comment")
+    #     comment.content = comment_input
+    #     comment.post_id = post_id_num
+    #     comment.post_url_string = post_id
+    #     comment.username = user.username
+    #     comment.user_id = user.key.id()
+    #     comment.put()
+    #     self.redirect("/blog/post/"+post_id)
 
-    @post_exists
-    def put(self, post_id, post, *args):
-        """Update post with post_id"""
-        method = self.request.get("_method")
-        print "inside post handler put method", method
-        post_key = ndb.Key(urlsafe=post_id)
-        post = post_key.get()
-        post.subject = self.request.get('subject')
-        post.content = self.request.get('content')
-        post.put()
-        obj = {
-            'success': 'True',
-            'action': 'redirect',
-            'redirect_path': '/blog/post/{0}'.format(post_id)
-        }
-        self.response.write(json.encode(obj))
+    # @post_exists
+    # def put(self, post_id, post, *args):
+    #     """Update post with post_id"""
+    #     method = self.request.get("_method")
+    #     print "inside post handler put method", method
+    #     post_key = ndb.Key(urlsafe=post_id)
+    #     post = post_key.get()
+    #     post.subject = self.request.get('subject')
+    #     post.content = self.request.get('content')
+    #     post.put()
+    #     obj = {
+    #         'success': 'True',
+    #         'action': 'redirect',
+    #         'redirect_path': '/blog/post/{0}'.format(post_id)
+    #     }
+    #     self.response.write(json.encode(obj))
 

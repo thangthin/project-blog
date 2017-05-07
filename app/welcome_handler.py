@@ -7,21 +7,14 @@ blog_uri = BlogRoutes()
 
 
 class WelcomeHandler(Handler):
-    def get_user(self):
-        try:
-            cookie = self.request.cookies["user_auth"]
-            cookie_list = cookie.split("|")
-            user_id = int(cookie_list[0])
-            user = User.get_by_id(user_id)
-            return user
-        except Exception:
-            return None
-
+    """Render welcome page with last 10 posts if user is authenticated
+       Redirect user to signup page if not
+    """
     def get(self):
-        authorized = self.authenticate()
-        if authorized:
+        authenticated = self.authenticate()
+        if authenticated:
             posts = Post.query().order(-Post.created_date).fetch(10)
-            user = self.get_user()
+            user = self.user
             self.render('blog/welcome.html', posts=posts, user=user)
         else:
             uri_signup = webapp2.uri_for(blog_uri.signup_uri_name)

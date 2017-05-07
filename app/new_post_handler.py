@@ -6,12 +6,9 @@ blog_uri = BlogRoutes()
 
 
 class NewPostHandler(Handler):
-    def get_user_name(self):
-        cookie = self.request.cookies["user_auth"]
-        user_id = cookie.split("|")[0]
-        username = User.get_by_id(int(user_id)).username
-        return username
-
+    """Handle the creation of new post.
+       Only allow user to create new post if user is logged in
+    """
     def save_post(self, username, subject, content):
         post = Post(voters=[Voter(username=username)])
         post.username = username
@@ -26,7 +23,7 @@ class NewPostHandler(Handler):
         self.render('blog/newpost.html', user=self.user)
 
     def post(self):
-        username = self.get_user_name()
+        username = self.user.username
         subject = self.request.get('subject')
         content = self.request.get('content')
         url_safe_post = self.save_post(username, subject, content)
