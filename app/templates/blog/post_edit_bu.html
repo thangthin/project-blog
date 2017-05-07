@@ -14,7 +14,7 @@
 </header>
 <main class="container">
     <div class="row">
-        <form class="col s12" id="post_edit_form">
+        <form class="col s12" method="post">
             <div class="row">
                 <div class="input-field col s12">
                     <input id="subject" type="text" class="validate" name="subject" value="{{post.subject}}">
@@ -24,11 +24,11 @@
             <div class="row">
                 <div class="input-field col s12">
                     <textarea id="content" name="content" class="materialize-textarea">{{post.content}}</textarea>
-                    <label for="content">Content This is new</label>
+                    <label for="content">Content</label>
                 </div>
             </div>
             <div class="row">
-                <button id="post-edit-submit" class="btn waves-effect waves-light" onclick="updatePost('{{post.key.urlsafe()}}')">Save
+                <button class="btn waves-effect waves-light" type="submit" name="action">Save
                   <i class="material-icons right">send</i>
                 </button>
                 <a href="/blog/post/{{post.key.urlsafe()}}" class="btn waves-effect waves-light">Cancel

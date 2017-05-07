@@ -1,7 +1,7 @@
 import webapp2
 import jinja2
 import os
-from models import User, Post
+from models import User, Post, Voter
 from google.appengine.ext import ndb
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -14,6 +14,7 @@ class Handler(webapp2.RequestHandler):
         """Save user instance, if cookie is set but corrupt
            redirect user to login page"""
         webapp2.RequestHandler.initialize(self, *args, **kwargs)
+        cookie = None
         try:
             cookie = self.request.cookies["user_auth"]
             cookie_list = cookie.split("|")
@@ -75,3 +76,13 @@ class Handler(webapp2.RequestHandler):
 
     def render(self, template, **kwargs):
         self.write(self.render_str(template, **kwargs))
+
+    def save_post(self, username, subject, content):
+        post = Post(voters=[Voter(username=username)])
+        post.username = username
+        post.subject = subject
+        post.content = content
+        post.vote = 0
+        post_key = post.put()
+        url_string = post_key.urlsafe()
+        return url_string

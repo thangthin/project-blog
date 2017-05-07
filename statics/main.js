@@ -13,6 +13,12 @@ $(document).ready(function() {
         // make api call to update vote for by user
         updateVote(postId);
     }
+
+    // prevent defaults of submit buttons, use fetch for passing form value
+    let postEditForm = document.getElementById('post-edit-submit').addEventListener('click', (evt) => {
+        evt.preventDefault();
+        console.log("prevented default on post edit form");
+    });
 });
 
 // set the constants for url to switch between localhost and hosted url
@@ -20,6 +26,7 @@ const WEB_APP_URL = window.location.origin;
 const SAVE_COMMENT_URL = `${WEB_APP_URL}/blog/comment/`;
 const DELETE_COMMENT_URL = `${WEB_APP_URL}/blog/comment/`;
 const UPDATE_VOTE_URL = `${WEB_APP_URL}/blog/postvote/`;
+const UPDATE_POST_URL = `${WEB_APP_URL}/blog/post/`
 
 function setModalContentFor(commentId) {
     // Prefill the modal form content with comment value, and add click listener to modal button
@@ -139,5 +146,29 @@ function updateVote(postId) {
         return response.json();
     }).then((resObj) => {
         updateVoteDisplay(resObj);
+    });
+}
+
+function updatePost(post_id) {
+    //update post with post_id with put method
+    console.log("update post called", post_id);
+    let form = new FormData();
+    let new_subject = document.querySelector("input[id='subject']").value;
+    let new_content = document.querySelector("textarea[id='content']").value;
+    form.append('post-id', post_id);
+    form.append('subject', new_subject);
+    form.append('content', new_content);
+
+    fetch(`${UPDATE_POST_URL}${post_id}`, {
+        credentials: 'same-origin',
+        method: 'put',
+        body: form
+    }).then((response) => {
+        console.log("updatePost called", response.status);
+        return response.json();
+    }).then((resObj) => {
+        console.log("server return object initiated by updatePost call", resObj);
+        //TODO: implement success handler
+        window.location.replace(`${WEB_APP_URL}${resObj.redirect_path}`);
     });
 }

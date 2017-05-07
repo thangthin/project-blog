@@ -1,6 +1,7 @@
 import webapp2
 from handler import Handler
 from google.appengine.ext import ndb
+from webapp2_extras import json
 from models import User, Post, Comment
 from blog_routes import BlogRoutes
 from blog_decorators import post_exists, user_own_post
@@ -19,7 +20,8 @@ class PostHandler(Handler):
                     comments=comments)
 
     def post(self, post_id):
-        """Creating a new post"""
+        """TODO: FIX This to creat new post instead of Creating comment!!!!!"""
+        print "inside creating a post of post handler"
         user = self.get_user()
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()
@@ -36,3 +38,20 @@ class PostHandler(Handler):
         comment.user_id = user.key.id()
         comment.put()
         self.redirect("/blog/post/"+post_id)
+
+    @post_exists
+    def put(self, post_id, post, *args):
+        """Update post with post_id"""
+        print "inside post handler put method"
+        post_key = ndb.Key(urlsafe=post_id)
+        post = post_key.get()
+        post.subject = self.request.get('subject')
+        post.content = self.request.get('content')
+        post.put()
+        obj = {
+            'success': 'True',
+            'action': 'redirect',
+            'redirect_path': '/blog/post/{0}'.format(post_id)
+        }
+        self.response.write(json.encode(obj))
+
