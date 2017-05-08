@@ -28,6 +28,7 @@ from app.post_delete_handler import PostDeleteHandler
 from app.post_delete_success_handler import PostDeleteSuccessHandler
 from app.comment_handler import CommentHandler
 from app.vote_handler import VoteHandler
+from app.error_handler import ErrorHandler
 blog_uri = BlogRoutes()
 
 app = webapp2.WSGIApplication([
@@ -68,5 +69,10 @@ app = webapp2.WSGIApplication([
     webapp2.Route(r'/blog/postvote/',
                   handler=VoteHandler,
                   name='post-vote-api'),
-
+    webapp2.Route(r'/blog/error/permission',
+                  handler=ErrorHandler,
+                  name='blog-permission-error'),
+    webapp2.Route(r'/blog/error/resource',
+                  handler=ErrorHandler,
+                  name='blog-permission-error'),
 ], debug=True)

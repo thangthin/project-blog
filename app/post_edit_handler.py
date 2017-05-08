@@ -21,9 +21,25 @@ class PostEditHandler(Handler):
     def post(self, post_id):
         post_key = ndb.Key(urlsafe=post_id)
         post = post_key.get()
-        post.subject = self.request.get('subject')
-        post.content = self.request.get('content')
-        post.put()
-        uri_post = webapp2.uri_for(blog_uri.post_uri_name, post_id=post_id)
-        self.redirect(uri_post)
+        new_subject = self.request.get('subject')
+        new_content = self.request.get('content')
+        if not self.check_edit_form_validity(new_subject, new_content):
+            self.render("blog/post_edit.html",
+                        post=post,
+                        user=self.user,
+                        subject=new_subject,
+                        content=new_content,
+                        error="subject or content can't be empty")
+        else:
+            post.subject = new_subject
+            post.content = new_content
+            post.put()
+            uri_post = webapp2.uri_for(blog_uri.post_uri_name, post_id=post_id)
+            self.redirect(uri_post)
+
+    def check_edit_form_validity(self, subject, content):
+        """Return False if subject or content is empty"""
+        if not subject or not content:
+            return False
+        return True
 

@@ -12,6 +12,7 @@ class CommentHandler(Handler):
     @comment_exists
     @user_own_comment
     def post(self, comment, **kwargs):
+        """Handle comment update"""
         comment_content = self.request.get("comment-content")
         comment.content = comment_content
         comment.put()

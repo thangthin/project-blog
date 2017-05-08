@@ -18,13 +18,13 @@
             <input type="hidden" name="_method" value="put">
             <div class="row">
                 <div class="input-field col s12">
-                    <input id="subject" type="text" class="validate" name="subject" value="{{post.subject}}">
+                    <input id="subject" type="text" class="validate" name="subject" value="{%if error%}{{subject}}{%else%}{{post.subject}}{%endif%}">
                     <label for="subject">Subject</label>
                 </div>
             </div>
             <div class="row">
                 <div class="input-field col s12">
-                    <textarea id="content" name="content" class="materialize-textarea">{{post.content}}</textarea>
+                    <textarea id="content" name="content" class="materialize-textarea">{%if error%}{{content}}{%else%}{{post.content}}{%endif%}</textarea>
                     <label for="content">Content This is new</label>
                 </div>
             </div>
@@ -38,5 +38,5 @@
             </div>
         </form>
     </div>
-
+<div class="red">{{error}}</div>
 </main>{% endblock %}

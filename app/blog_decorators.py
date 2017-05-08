@@ -21,7 +21,7 @@ def post_exists(function):
         if post:
             return function(self, post_id, post, post_key)
         else:
-            self.redirect('/blog/error')
+            self.redirect('/blog/error/resource')
             return
     return wrapper
 
@@ -36,12 +36,16 @@ def user_own_post(function):
             post_urlsafe = post_id
         else:
             post_urlsafe = kwargs.get("post_id")
-        post_key = ndb.Key(urlsafe=post_urlsafe)
-        post = post_key.get()
-        if post.username == self.user.username:
+        try:
+            post_key = ndb.Key(urlsafe=post_urlsafe)
+            post = post_key.get()
+        except Exception:
+            post = None
+        if post and self.user and post.username == self.user.username and self.authenticate():
+            print "user own post and authenticated"
             return function(self, post_id)
         else:
-            self.redirect('/blog/error')
+            self.redirect('/blog/error/permission')
             return
     return wrapper
 

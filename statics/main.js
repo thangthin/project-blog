@@ -13,12 +13,6 @@ $(document).ready(function() {
         // make api call to update vote for by user
         updateVote(postId);
     }
-
-    // prevent defaults of submit buttons, use fetch for passing form value
-    // let postEditForm = document.getElementById('post-edit-submit').addEventListener('click', (evt) => {
-    //     evt.preventDefault();
-    //     console.log("prevented default on post edit form");
-    // });
 });
 
 // set the constants for url to switch between localhost and hosted url
@@ -168,7 +162,6 @@ function updatePost(post_id) {
         return response.json();
     }).then((resObj) => {
         console.log("server return object initiated by updatePost call", resObj);
-        //TODO: implement success handler
         window.location.replace(`${WEB_APP_URL}${resObj.redirect_path}`);
     });
 }
